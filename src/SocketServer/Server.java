@@ -1,3 +1,5 @@
+package SocketServer;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,21 +14,21 @@ public class Server implements IAccountService {
 
 	public static void main(String[] args) {
 		System.out.println("I'm server");
-
+		Server server = new Server();
 
 		try {
 			ServerSocket serverSocket = new ServerSocket(11111);
 			while (true) {
 				System.out.println("Waiting clients");
 				Socket socket = serverSocket.accept();
-				System.out.println("Client connect");
+				System.out.println("SocketServer.Client connect");
 				countOfConnectedClient++;
 				DataInputStream inputStream = new DataInputStream(socket.getInputStream());
 				DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
 
 				Integer id = inputStream.readInt();
 				System.out.println("Get id from client : " + id);
-				Long amount = new DataBase().getAmount(id);
+				Long amount = server.getAmount(id);
 				System.out.println("Send amount to client: " + amount);
 				outputStream.writeLong(amount);
 				outputStream.flush();

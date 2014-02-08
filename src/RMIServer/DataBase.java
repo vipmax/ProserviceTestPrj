@@ -1,8 +1,12 @@
+package RMIServer;
+
 import java.sql.*;
 
 /**
- * Created by vipmax on 06.02.14.
+ * Created by vipmax on 08.02.14.
  */
+
+
 public class DataBase {
 	Connection c = null;
 	Statement s = null;
@@ -23,7 +27,7 @@ public class DataBase {
 			while (r.next()) {
 
 				if (id == r.getLong("id")) {
-					System.out.println("Find in DataBase:  " + r.getString("id") + ", " + r.getString("value"));
+					System.out.println("Find in SocketServer.DataBase:  " + r.getString("id") + ", " + r.getString("value"));
 					return (Long) r.getLong("value");
 				}
 			}
@@ -45,5 +49,3 @@ public class DataBase {
 	}
 
 }
-
-
