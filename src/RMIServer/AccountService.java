@@ -12,6 +12,6 @@ public interface AccountService extends Remote {
 
 	Long getAmount(Integer id) throws RemoteException;
 
-	void addAmount(Integer id, Long value) throws RemoteException;
+	boolean addAmount(Integer id, Long value) throws RemoteException;
 
 }

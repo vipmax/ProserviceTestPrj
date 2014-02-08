@@ -25,14 +25,17 @@ public class Client {
 				Client client = new Client();
 				try {
 					client.initRegistryAndService();
-
+					// getAmount
 					Integer id = Integer.valueOf((int) (Math.random() * 5 + 1));
 					System.out.println("Send id to server: " + id);
 					Long amount = client.availableServiceList.getAmount(3);
-
 					System.out.println("Got from server: " + amount);
-
-					client.availableServiceList.addAmount(7, new Long(9999));
+					// addAmount
+					id = Integer.valueOf((int) (Math.random() * 1000));
+					amount = new Long((int) (Math.random() * 1000) + 1);
+					if (client.availableServiceList.addAmount(id, amount)) {
+						System.out.println("Added in database " + id + ", " + amount);
+					}
 
 				} catch (RemoteException e) {
 					e.printStackTrace();

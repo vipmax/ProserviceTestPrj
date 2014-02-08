@@ -11,18 +11,25 @@ import java.rmi.server.UnicastRemoteObject;
 public class Server implements AccountService {
 
 	public static final String BINDING_NAME = "Service";
+	DataBase dataBase = new DataBase();
 
 	@Override
 	public Long getAmount(Integer id) {
+		System.out.println("*******************");
 		System.out.println("SocketServer.Client with id = " + id + " connected");
-		DataBase dataBase = new DataBase();
+
 
 		Long amount = dataBase.getAmount(id);
 		return amount;
 	}
 
 	@Override
-	public void addAmount(Integer id, Long value) {
+	public boolean addAmount(Integer id, Long value) {
+		System.out.println("*******************");
+		System.out.println("Client connected and he mean add rows : " + id + ", " + value);
+		dataBase.addAmount(id, value);
+
+		return true;
 
 	}
 
