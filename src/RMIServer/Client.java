@@ -13,7 +13,7 @@ import java.rmi.registry.Registry;
 public class Client {
 
 	private Registry registry;
-	private AccountService service;
+	private AccountService availableServiceList;
 
 	public static void main(String... args) throws Exception {
 
@@ -25,9 +25,14 @@ public class Client {
 				Client client = new Client();
 				try {
 					client.initRegistryAndService();
+
 					Integer id = Integer.valueOf((int) (Math.random() * 5 + 1));
-					Long amount = client.service.getAmount(id);
-					System.out.println(amount);
+					System.out.println("Send id to server: " + id);
+					Long amount = client.availableServiceList.getAmount(3);
+
+					System.out.println("Got from server: " + amount);
+
+					client.availableServiceList.addAmount(7, new Long(9999));
 
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -44,7 +49,7 @@ public class Client {
 
 	private void initRegistryAndService() throws RemoteException, NotBoundException {
 		registry = LocateRegistry.getRegistry("localhost", 2099);
-		service = (AccountService) registry.lookup("Service");
+		availableServiceList = (AccountService) registry.lookup("Service");
 	}
 
 }

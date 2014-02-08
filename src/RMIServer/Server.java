@@ -12,6 +12,7 @@ public class Server implements AccountService {
 
 	public static final String BINDING_NAME = "Service";
 
+	@Override
 	public Long getAmount(Integer id) {
 		System.out.println("SocketServer.Client with id = " + id + " connected");
 		DataBase dataBase = new DataBase();
