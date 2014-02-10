@@ -17,7 +17,6 @@ public class Client {
 
 	public static void main(String... args) throws Exception {
 
-//		for(int i = 0; i<2;i++) {
 
 		new Thread(new Runnable() {
 			@Override
@@ -29,6 +28,16 @@ public class Client {
 					Integer id = Integer.valueOf((int) (Math.random() * 5 + 1));
 					System.out.println("Send id to server: " + id);
 					Long amount = client.availableServiceList.getAmount(3);
+					System.out.println("Got from server: " + amount);
+					// getAmount
+					id = Integer.valueOf((int) (Math.random() * 5 + 1));
+					System.out.println("Send id to server: " + id);
+					amount = client.availableServiceList.getAmount(3);
+					System.out.println("Got from server: " + amount);
+					// getAmount
+					id = Integer.valueOf((int) (Math.random() * 5 + 1));
+					System.out.println("Send id to server: " + id);
+					amount = client.availableServiceList.getAmount(3);
 					System.out.println("Got from server: " + amount);
 					// addAmount
 					id = Integer.valueOf((int) (Math.random() * 1000));
@@ -47,7 +56,7 @@ public class Client {
 			}
 		}).start();
 
-//		}
+
 	}
 
 	private void initRegistryAndService() throws RemoteException, NotBoundException {

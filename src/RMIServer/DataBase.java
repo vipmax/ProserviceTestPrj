@@ -16,13 +16,13 @@ public class DataBase {
 	public Long getAmount(Integer id) {
 
 		String sqlRequest = "select * from account_balance where id = " + id;
-		System.out.println(sqlRequest);
+
 		ResultSet data = getInfoFromDB(sqlRequest);
 
 		try {
 
 			if (data.next()) {
-				System.out.println("Find in Server.DataBase:  " + data.getString("id") + ", " + data.getString("value"));
+				//	System.out.println("Find in Server.DataBase:  " + data.getString("id") + ", " + data.getString("value"));
 				return (Long) data.getLong("value");
 			}
 
@@ -37,7 +37,7 @@ public class DataBase {
 
 	public void addAmount(Integer id, Long amount) {
 		String sqlRequest = "insert into account_balance values (" + id + ", " + amount + ");";
-		System.out.println(sqlRequest);
+
 		try {
 			updateDB(sqlRequest);
 		} catch (SQLException e) {
