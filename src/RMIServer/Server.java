@@ -59,8 +59,8 @@ public class Server implements AccountService {
 						e.printStackTrace();
 					}
 
-					System.out.println("Count of request in one sec :   getAmount() = " + countOfRequestGetAmount
-							+ "  addAmount() = " + countOfRequestAddAmount
+					System.out.println("Count of request in one sec :   getAmount = " + countOfRequestGetAmount
+							+ "  addAmount = " + countOfRequestAddAmount
 							+ "  All Request = " + countOfAllRequest);
 
 
