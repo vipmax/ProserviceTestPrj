@@ -27,18 +27,10 @@ public class Client {
 					// getAmount
 					Integer id = Integer.valueOf((int) (Math.random() * 5 + 1));
 					System.out.println("Send id to server: " + id);
-					Long amount = client.availableServiceList.getAmount(3);
+					Long amount = client.availableServiceList.getAmount(id);
 					System.out.println("Got from server: " + amount);
-					// getAmount
-					id = Integer.valueOf((int) (Math.random() * 5 + 1));
-					System.out.println("Send id to server: " + id);
-					amount = client.availableServiceList.getAmount(3);
-					System.out.println("Got from server: " + amount);
-					// getAmount
-					id = Integer.valueOf((int) (Math.random() * 5 + 1));
-					System.out.println("Send id to server: " + id);
-					amount = client.availableServiceList.getAmount(3);
-					System.out.println("Got from server: " + amount);
+
+
 					// addAmount
 					id = Integer.valueOf((int) (Math.random() * 1000));
 					amount = new Long((int) (Math.random() * 1000) + 1);

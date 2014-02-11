@@ -3,12 +3,18 @@ package RMIServer;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by vipmax on 2/11/14.
  */
 public class Statistic {
 
+
+	public static Integer countOfRequestAddAmountInOneSec;
+	public static Integer countOfRequestGetAmountInOneSec;
+	public static Integer countOfAllRequestGetAmount = 0;
+	public static Integer countOfAllRequestAddAmount = 0;
 
 	public static void pushToFile(String s, String host) {
 		File file = new File(s);
@@ -23,5 +29,32 @@ public class Statistic {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static void startTime() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+
+
+					countOfRequestAddAmountInOneSec = 0;
+					countOfRequestGetAmountInOneSec = 0;
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					System.out.println("Count of request in one sec :   getAmount = " + countOfRequestGetAmountInOneSec
+							+ "  addAmount = " + countOfRequestAddAmountInOneSec
+							+ "  All Request = " + (countOfAllRequestGetAmount + countOfAllRequestAddAmount));
+
+
+				}
+			}
+
+
+		}).start();
 	}
 }

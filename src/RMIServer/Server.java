@@ -8,20 +8,18 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.TimeUnit;
 
 public class Server implements AccountService {
 
 	public static final String BINDING_NAME = "Service";
 	DataBase dataBase = new DataBase();
-	private static Integer countOfRequestGetAmountInOneSec, countOfRequestAddAmountInOneSec, countOfAllRequestGetAmount = 0, countOfAllRequestAddAmount = 0;
 
 
 	@Override
 	public Long getAmount(Integer id) {
 
-		countOfRequestGetAmountInOneSec++;
-		countOfAllRequestGetAmount++;
+		Statistic.countOfRequestGetAmountInOneSec++;
+		Statistic.countOfAllRequestGetAmount++;
 		String s = null;
 		try {
 			s = UnicastRemoteObject.getClientHost();
@@ -31,8 +29,8 @@ public class Server implements AccountService {
 		Statistic.pushToFile("getAmount stat", s);
 
 
-		//System.out.println("*******************");
-		//System.out.println("SocketServer.Client with id = " + id + " connected");
+		System.out.println("*******************");
+		System.out.println("Client with id = " + id + " connected");
 
 
 		Long amount = dataBase.getAmount(id);
@@ -43,8 +41,10 @@ public class Server implements AccountService {
 
 	@Override
 	public boolean addAmount(Integer id, Long value) {
-		countOfRequestAddAmountInOneSec++;
-		countOfAllRequestAddAmount++;
+
+		Long secRun = System.currentTimeMillis();
+		Statistic.countOfRequestAddAmountInOneSec++;
+		Statistic.countOfAllRequestAddAmount++;
 		String s = null;
 		try {
 			s = UnicastRemoteObject.getClientHost();
@@ -52,42 +52,21 @@ public class Server implements AccountService {
 			e.printStackTrace();
 		}
 		Statistic.pushToFile("addAmount stat", s);
-		//System.out.println("*******************");
-		//System.out.println("Client connected and he mean add rows : " + id + ", " + value);
+		System.out.println("*******************");
+		System.out.println("Client connected and he mean add rows : " + id + ", " + value);
 		dataBase.addAmount(id, value);
-		System.out.println("Count Of All Request" + countOfAllRequestGetAmount);
+		System.out.println("Count Of All Request " + Statistic.countOfAllRequestGetAmount);
+		System.out.println("Time: " + (System.currentTimeMillis() - secRun));
 		return true;
 
 	}
 
+
 	public static void main(String... args) throws Exception {
 		Server server = new Server();
 		server.startServer();
+		Statistic.startTime();
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-
-
-					countOfRequestAddAmountInOneSec = 0;
-					countOfRequestGetAmountInOneSec = 0;
-					try {
-						TimeUnit.SECONDS.sleep(1);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-					System.out.println("Count of request in one sec :   getAmount = " + countOfRequestGetAmountInOneSec
-							+ "  addAmount = " + countOfRequestAddAmountInOneSec
-							+ "  All Request = " + (countOfAllRequestGetAmount + countOfAllRequestAddAmount));
-
-
-				}
-			}
-
-
-		}).start();
 	}
 
 
