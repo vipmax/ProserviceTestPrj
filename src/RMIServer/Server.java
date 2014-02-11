@@ -6,6 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.TimeUnit;
 
@@ -13,13 +14,23 @@ public class Server implements AccountService {
 
 	public static final String BINDING_NAME = "Service";
 	DataBase dataBase = new DataBase();
-	private static Integer countOfRequestGetAmount, countOfRequestAddAmount, countOfAllRequest = 0;
+	private static Integer countOfRequestGetAmountInOneSec, countOfRequestAddAmountInOneSec, countOfAllRequestGetAmount = 0, countOfAllRequestAddAmount = 0;
+
 
 	@Override
 	public Long getAmount(Integer id) {
 
-		countOfRequestGetAmount++;
-		countOfAllRequest++;
+		countOfRequestGetAmountInOneSec++;
+		countOfAllRequestGetAmount++;
+		String s = null;
+		try {
+			s = UnicastRemoteObject.getClientHost();
+		} catch (ServerNotActiveException e) {
+			e.printStackTrace();
+		}
+		Statistic.pushToFile("getAmount stat", s);
+
+
 		//System.out.println("*******************");
 		//System.out.println("SocketServer.Client with id = " + id + " connected");
 
@@ -32,12 +43,19 @@ public class Server implements AccountService {
 
 	@Override
 	public boolean addAmount(Integer id, Long value) {
-		countOfRequestAddAmount++;
-		countOfAllRequest++;
+		countOfRequestAddAmountInOneSec++;
+		countOfAllRequestAddAmount++;
+		String s = null;
+		try {
+			s = UnicastRemoteObject.getClientHost();
+		} catch (ServerNotActiveException e) {
+			e.printStackTrace();
+		}
+		Statistic.pushToFile("addAmount stat", s);
 		//System.out.println("*******************");
 		//System.out.println("Client connected and he mean add rows : " + id + ", " + value);
 		dataBase.addAmount(id, value);
-		System.out.println("Count Of All Request" + countOfAllRequest);
+		System.out.println("Count Of All Request" + countOfAllRequestGetAmount);
 		return true;
 
 	}
@@ -45,23 +63,24 @@ public class Server implements AccountService {
 	public static void main(String... args) throws Exception {
 		Server server = new Server();
 		server.startServer();
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
 
 
-					countOfRequestAddAmount = 0;
-					countOfRequestGetAmount = 0;
+					countOfRequestAddAmountInOneSec = 0;
+					countOfRequestGetAmountInOneSec = 0;
 					try {
 						TimeUnit.SECONDS.sleep(1);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 
-					System.out.println("Count of request in one sec :   getAmount = " + countOfRequestGetAmount
-							+ "  addAmount = " + countOfRequestAddAmount
-							+ "  All Request = " + countOfAllRequest);
+					System.out.println("Count of request in one sec :   getAmount = " + countOfRequestGetAmountInOneSec
+							+ "  addAmount = " + countOfRequestAddAmountInOneSec
+							+ "  All Request = " + (countOfAllRequestGetAmount + countOfAllRequestAddAmount));
 
 
 				}
