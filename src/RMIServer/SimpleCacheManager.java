@@ -48,8 +48,10 @@ public class SimpleCacheManager {
 	public void loadCache(DataBase dataBase) throws SQLException {
 		ResultSet r = dataBase.getInfoFromDB("Select * from  account_balance");
 		while (r.next()) {
-			instance.put(r.getInt("id"), r.getLong("value"));
+			instance.put(r.getInt("id"), r.getLong("value"));  //may be OutOfMemoryError
 
+			//Dо избежании исключения, необходимо реализовать кэш с помощью Ehcache
+			//by avoiding exceptionneed to implement the cache with some help Ehcache
 		}
 	}
 
