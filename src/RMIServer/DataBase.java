@@ -17,7 +17,7 @@ public class DataBase {
 	public DataBase() {
 		SimpleCacheManager cacheManager = SimpleCacheManager.getInstance();
 		try {
-			cacheManager.loadCashe(this);
+			cacheManager.loadCache(this);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -45,7 +45,7 @@ public class SimpleCacheManager {
 		return instance;
 	}
 
-	public void loadCashe(DataBase dataBase) throws SQLException {
+	public void loadCache(DataBase dataBase) throws SQLException {
 		ResultSet r = dataBase.getInfoFromDB("Select * from  account_balance");
 		while (r.next()) {
 			instance.put(r.getInt("id"), r.getLong("value"));
