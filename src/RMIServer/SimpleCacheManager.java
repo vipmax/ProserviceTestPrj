@@ -1,5 +1,7 @@
 package RMIServer;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ public class SimpleCacheManager {
 		cache.put(cacheKey, value);
 	}
 
-	public Object get(Integer cacheKey) {
+	public Long get(Integer cacheKey) {
 		return cache.get(cacheKey);
 	}
 
@@ -43,4 +45,16 @@ public class SimpleCacheManager {
 		return instance;
 	}
 
+	public void loadCashe(DataBase dataBase) throws SQLException {
+		ResultSet r = dataBase.getInfoFromDB("Select * from  account_balance");
+		while (r.next()) {
+			instance.put(r.getInt("id"), r.getLong("value"));
+
+		}
+	}
+
+
+	public void updateValue(Integer id, Long value) {
+		cache.put(id, value);
+	}
 }

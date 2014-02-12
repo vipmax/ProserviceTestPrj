@@ -12,8 +12,19 @@ public class DataBase {
 	String dbUrl = "jdbc:postgresql://localhost:5432/ProserviceTestDB";
 	String user = "root";
 	String password = "root";
+	public static final Long notFount = new Long((long) -1);
+
+	public DataBase() {
+		SimpleCacheManager cacheManager = SimpleCacheManager.getInstance();
+		try {
+			cacheManager.loadCashe(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public Long getAmount(Integer id) {
+
 
 		String sqlRequest = "select * from account_balance where id = " + id;
 
@@ -31,7 +42,7 @@ public class DataBase {
 		}
 
 
-		return Long.valueOf(-1);
+		return notFount;
 
 	}
 
@@ -48,7 +59,7 @@ public class DataBase {
 	}
 
 
-	private ResultSet getInfoFromDB(String request) {
+	public ResultSet getInfoFromDB(String request) {
 		Connection c = null;
 		Statement s = null;
 		ResultSet r = null;

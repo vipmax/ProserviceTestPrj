@@ -17,7 +17,9 @@ public class Server implements AccountService {
 
 	@Override
 	public Long getAmount(Integer id) {
-
+		System.out.println("*******************");
+		System.out.println("Id = " + id + " connected");
+		Long secRun = System.currentTimeMillis();
 		Statistic.countOfRequestGetAmountInOneSec++;
 		Statistic.countOfAllRequestGetAmount++;
 		String s = null;
@@ -29,20 +31,36 @@ public class Server implements AccountService {
 		Statistic.pushToFile("getAmount stat", s);
 
 
-		System.out.println("*******************");
+		SimpleCacheManager cacheManager = SimpleCacheManager.getInstance();
+		Long aLong = cacheManager.get(id);
+		if (aLong != null) {
+			System.out.println("Found in cache. Time: " + (System.currentTimeMillis() - secRun) + " ms");
+			return aLong;
+		}
+
+
 		System.out.println("Client with id = " + id + " connected");
 
 
 		Long amount = dataBase.getAmount(id);
+		if (amount.equals(DataBase.notFount)) {
+			System.out.println("Not Found in database.Time: " + (System.currentTimeMillis() - secRun) + " ms");
+			return amount;
+		}
 
 
+		System.out.println("Found in database.Time: " + (System.currentTimeMillis() - secRun) + " ms");
+		System.out.println("*******************");
 		return amount;
 	}
 
 	@Override
 	public boolean addAmount(Integer id, Long value) {
-
+		System.out.println("*******************");
+		System.out.println("Id = " + id + " connected with value = " + value);
 		Long secRun = System.currentTimeMillis();
+		SimpleCacheManager.getInstance().updateValue(id, value);
+		System.out.println("Update cache. Time: " + (System.currentTimeMillis() - secRun) + " ms");
 		Statistic.countOfRequestAddAmountInOneSec++;
 		Statistic.countOfAllRequestAddAmount++;
 		String s = null;
@@ -52,11 +70,11 @@ public class Server implements AccountService {
 			e.printStackTrace();
 		}
 		Statistic.pushToFile("addAmount stat", s);
-		System.out.println("*******************");
-		System.out.println("Client connected and he mean add rows : " + id + ", " + value);
+
 		dataBase.addAmount(id, value);
-		System.out.println("Count Of All Request " + Statistic.countOfAllRequestGetAmount);
-		System.out.println("Time: " + (System.currentTimeMillis() - secRun));
+
+		System.out.println("Update database. Time: " + (System.currentTimeMillis() - secRun) + " ms");
+		System.out.println("*******************");
 		return true;
 
 	}
