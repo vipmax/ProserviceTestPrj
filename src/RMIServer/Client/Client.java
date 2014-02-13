@@ -1,8 +1,11 @@
-package RMIServer;
+package RMIServer.Client;
 
 /**
  * Created by vipmax on 08.02.14.
  */
+
+import RMIServer.Server.AccountService;
+import RMIServer.Server.DataBase;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -16,7 +19,7 @@ public class Client {
 	private AccountService availableServiceList;
 	private static Integer id;
 	private static Long amount;
-	private static final Integer rCount = 1, wCount = 0, clientCount = 1;
+	private static final Integer rCount = 0, wCount = 1, clientCount = 1;
 
 
 	public static void main(String... args) throws Exception {
@@ -35,7 +38,7 @@ public class Client {
 					for (int i = 0; i < rCount; i++) {
 						id = Integer.valueOf((int) (Math.random() * 1000));
 						System.out.println("Send id to server: " + id);
-						amount = client.availableServiceList.getAmount(id);
+						amount = client.availableServiceList.getAmount(491);
 						if (amount.equals(DataBase.notFount)) {
 							System.out.println("Not found such id : " + id);
 						} else {

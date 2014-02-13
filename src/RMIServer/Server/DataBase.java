@@ -1,4 +1,4 @@
-package RMIServer;
+package RMIServer.Server;
 
 import java.sql.*;
 

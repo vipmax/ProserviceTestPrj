@@ -1,15 +1,11 @@
-package RMIServer;
+package RMIServer.Server;
 
-import com.hazelcast.config.Config;
-import com.hazelcast.core.Hazelcast;
-import com.hazelcast.core.HazelcastInstance;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by vipmax on 2/11/14.
@@ -59,7 +55,6 @@ public class CacheManager {
 		while (r.next() && i < 100) {
 			cache.put(r.getInt("id"), r.getLong("value"));  //may be OutOfMemoryError
 
-			map.put(r.getInt("id"), r.getLong("value"));
 			i++;
 		}
 
@@ -71,16 +66,5 @@ public class CacheManager {
 		cache.put(id, value);
 	}
 
-	Config config = new Config();
-	HazelcastInstance h = Hazelcast.newHazelcastInstance(config);
-	ConcurrentMap<Integer, Long> map = h.getMap("my-distributed-map");
 
-
-	public void puth(Integer cacheKey, Long value) {
-		map.put(cacheKey, value);
-	}
-
-	public Long geth(Integer cacheKey) {
-		return map.get(cacheKey);
-	}
 }

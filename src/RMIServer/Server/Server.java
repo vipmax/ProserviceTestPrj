@@ -1,4 +1,4 @@
-package RMIServer;
+package RMIServer.Server;
 
 
 import java.rmi.AlreadyBoundException;
@@ -38,22 +38,32 @@ public class Server implements AccountService {
 		Statistic.pushToFile("getAmount stat", s);
 
 		Long nanoTime = System.nanoTime();
-		Long aLong = cacheManager.geth(id);
+
+		Long aLong = cacheManager.get(id);
+		Long deltaTime = System.nanoTime() - nanoTime;
+		Statistic.fullTimeHitCache += deltaTime;
 		if (aLong != null) {
-			System.out.println("Found in cache. Time: " + (System.nanoTime() - nanoTime) + " ns");
+			Statistic.countHitToCash++;
+			System.out.println("Found in cache. Time: " + deltaTime + " ns" + " avg: " + Statistic.fullTimeHitCache / Statistic.countHitToCash + " ns" + " All hits :" + Statistic.countHitToCash);
 			return aLong;
 		}
 
 
-		nanoTime = System.nanoTime();
+		Long nanoTimeDB = System.nanoTime();
+
 		Long amount = dataBase.getAmount(id);
+		Long deltaTimeDB = System.nanoTime() - nanoTimeDB;
+
 		if (amount.equals(DataBase.notFount)) {
-			System.out.println("Not Found in database.Time: " + (System.nanoTime() - nanoTime) + " ns");
+			Statistic.fullTimeHitDB += deltaTimeDB;
+			Statistic.countHitToNotDB++;
+			System.out.println("Not Found in database.Time: " + deltaTimeDB + " ns" + " avg: " + Statistic.fullTimeHitDB / Statistic.countHitToNotDB + " ns" + " All hits :" + Statistic.countHitToNotDB);
+			System.out.println("*******************");
 			return amount;
 		}
-
-
-		System.out.println("Found in database.Time: " + (System.nanoTime() - nanoTime) + " ns");
+		Statistic.fullTimeHitDB += deltaTimeDB;
+		Statistic.countHitToDB++;
+		System.out.println("Found in database.Time: " + deltaTimeDB + " ns" + " avg: " + Statistic.fullTimeHitDB / Statistic.countHitToDB + " ns" + " All hits :" + Statistic.countHitToDB);
 		System.out.println("*******************");
 		return amount;
 	}
@@ -63,11 +73,6 @@ public class Server implements AccountService {
 	public boolean addAmount(Integer id, Long value) {
 		System.out.println("*******************");
 		System.out.println("Id = " + id + " connected with value = " + value);
-
-
-		Long nanoTime = System.nanoTime();
-		cacheManager.puth(id, value);
-		System.out.println("Update cache. Time: " + (System.nanoTime() - nanoTime) + " ns");
 
 
 		Statistic.countOfRequestAddAmountInOneSec++;
@@ -81,10 +86,13 @@ public class Server implements AccountService {
 			e.printStackTrace();
 		}
 
-		nanoTime = System.nanoTime();
+		Long nanoTimeWriteDB = System.nanoTime();
+		Statistic.countOfAddRowTToDB++;
 		dataBase.addAmount(id, value);
+		Long deltaTimeWriteDB = System.nanoTime() - nanoTimeWriteDB;                             //ADD IN DATABASE
+		Statistic.fullTimeAddInDB += deltaTimeWriteDB;
 
-		System.out.println("Update database. Time: " + (System.nanoTime() - nanoTime) + " ns");
+		System.out.println("Update database. Time: " + deltaTimeWriteDB + " ns" + " avg: " + Statistic.fullTimeAddInDB / Statistic.countOfAddRowTToDB + " ns" + " All hits :" + Statistic.countOfAddRowTToDB);
 		System.out.println("*******************");
 		return true;
 

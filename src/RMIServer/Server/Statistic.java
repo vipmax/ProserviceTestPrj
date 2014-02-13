@@ -1,4 +1,4 @@
-package RMIServer;
+package RMIServer.Server;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,6 +15,9 @@ public class Statistic {
 	public static Integer countOfRequestGetAmountInOneSec;
 	public static Integer countOfAllRequestGetAmount = 0;
 	public static Integer countOfAllRequestAddAmount = 0;
+	public static Long countHitToCash = new Long(0), countHitToDB = new Long(0), countHitToNotDB = new Long(0);
+	public static Long fullTimeHitCache = new Long(0), fullTimeHitDB = new Long(0);
+	public static Long countOfAddRowTToDB = new Long(0), fullTimeAddInDB = new Long(0);
 
 	public static void pushToFile(String s, String host) {
 		File file = new File(s);
@@ -57,4 +60,6 @@ public class Statistic {
 
 		}).start();
 	}
+
+
 }
