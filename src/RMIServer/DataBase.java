@@ -13,8 +13,19 @@ public class DataBase {
 	String user = "root";
 	String password = "root";
 	public static final Long notFount = new Long((long) -1);
+	private Connection connection;
+	private Statement statement;
 
 	public DataBase() {
+		try {
+
+			connection = DriverManager.getConnection(dbUrl, user, password);
+			statement = connection.createStatement();
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		CacheManager cacheManager = CacheManager.getInstance();
 		try {
 			cacheManager.loadCache(this);
@@ -41,7 +52,6 @@ public class DataBase {
 			e.printStackTrace();
 		}
 
-
 		return notFount;
 
 	}
@@ -60,16 +70,13 @@ public class DataBase {
 
 
 	public ResultSet getInfoFromDB(String request) {
-		Connection c = null;
-		Statement s = null;
+
 		ResultSet r = null;
 
 		// Загружаем драйвер (регистрирует себя)
 		try {
 			Class.forName("org.postgresql.Driver");
-			c = DriverManager.getConnection(dbUrl, user, password);
-			s = c.createStatement();
-			r = s.executeQuery(request);
+			r = statement.executeQuery(request);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -81,7 +88,7 @@ public class DataBase {
 	}
 
 	private boolean updateDB(String request) throws SQLException {
-		DriverManager.getConnection(dbUrl, user, password).createStatement().execute(request);
+		statement.execute(request);
 		return true;
 	}
 

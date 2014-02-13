@@ -28,25 +28,27 @@ public class Client {
 				Client client = new Client();
 				try {
 					client.initRegistryAndService();
-					// getAmount
-//					id = Integer.valueOf((int) (Math.random() * 1000));
-//					System.out.println("Send id to server: " + id);
-//					amount = client.availableServiceList.getAmount(id);
-//					if (amount.equals(DataBase.notFount)) {
-//						System.out.println("Not found such id : " + id);
-//					} else {
-//						System.out.println("Got from server: " + amount);
-//					}
+					//getAmount
 
+					for (int i = 0; i < 1000; i++) {
+						id = Integer.valueOf((int) (Math.random() * 1000));
+						System.out.println("Send id to server: " + id);
+						amount = client.availableServiceList.getAmount(id);
+						if (amount.equals(DataBase.notFount)) {
+							System.out.println("Not found such id : " + id);
+						} else {
+							System.out.println("Got from server: " + amount);
+						}
+					}
 
 					// addAmount
-					for (int i = 0; i < 1; i++) {
-						id = Integer.valueOf((int) (Math.random() * 1000));
-					amount = new Long((int) (Math.random() * 1000));
-					if (client.availableServiceList.addAmount(id, amount)) {
-						System.out.println("Added in database " + id + ", " + amount);
-					}
-					}
+//					for (int i = 0; i < 1; i++) {
+//						id = Integer.valueOf((int) (Math.random() * 1000));
+//					amount = new Long((int) (Math.random() * 1000));
+//					if (client.availableServiceList.addAmount(id, amount)) {
+//						System.out.println("Added in database " + id + ", " + amount);
+//					}
+//					}
 
 				} catch (RemoteException e) {
 					e.printStackTrace();

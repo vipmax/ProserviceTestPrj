@@ -55,11 +55,14 @@ public class CacheManager {
 		//Dо избежании исключения, необходимо реализовать кэш с помощью Ehcache
 		//by avoiding exceptionneed to implement the cache with some help Ehcache
 		ResultSet r = dataBase.getInfoFromDB("Select * from  account_balance");
-		while (r.next()) {
+		int i = 0;
+		while (r.next() && i < 100) {
 			cache.put(r.getInt("id"), r.getLong("value"));  //may be OutOfMemoryError
 
 			map.put(r.getInt("id"), r.getLong("value"));
+			i++;
 		}
+
 
 	}
 
