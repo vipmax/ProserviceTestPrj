@@ -16,10 +16,12 @@ public class Client {
 	private AccountService availableServiceList;
 	private static Integer id;
 	private static Long amount;
+	private static final Integer rCount = 1, wCount = 0, clientCount = 1;
+
 
 	public static void main(String... args) throws Exception {
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < clientCount; i++) {
 			new Thread(new Runnable() {
 				private Long amount;
 
@@ -30,7 +32,7 @@ public class Client {
 					client.initRegistryAndService();
 					//getAmount
 
-					for (int i = 0; i < 1000; i++) {
+					for (int i = 0; i < rCount; i++) {
 						id = Integer.valueOf((int) (Math.random() * 1000));
 						System.out.println("Send id to server: " + id);
 						amount = client.availableServiceList.getAmount(id);
@@ -41,14 +43,14 @@ public class Client {
 						}
 					}
 
-					// addAmount
-//					for (int i = 0; i < 1; i++) {
-//						id = Integer.valueOf((int) (Math.random() * 1000));
-//					amount = new Long((int) (Math.random() * 1000));
-//					if (client.availableServiceList.addAmount(id, amount)) {
-//						System.out.println("Added in database " + id + ", " + amount);
-//					}
-//					}
+					//addAmount
+					for (int i = 0; i < wCount; i++) {
+						id = Integer.valueOf((int) (Math.random() * 1000));
+						amount = new Long((int) (Math.random() * 1000));
+						if (client.availableServiceList.addAmount(id, amount)) {
+							System.out.println("Added in database " + id + ", " + amount);
+						}
+					}
 
 				} catch (RemoteException e) {
 					e.printStackTrace();
