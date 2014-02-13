@@ -14,7 +14,7 @@ public class Server implements AccountService {
 	public static final String BINDING_NAME = "Service";
 	DataBase dataBase = new DataBase();
 
-	SimpleCacheManager cacheManager = SimpleCacheManager.getInstance();
+	CacheManager cacheManager = CacheManager.getInstance();
 
 	@Override
 	public Long getAmount(Integer id) {
@@ -32,7 +32,7 @@ public class Server implements AccountService {
 		Statistic.pushToFile("getAmount stat", s);
 
 
-		Long aLong = cacheManager.get(id);
+		Long aLong = cacheManager.geth(id);
 		if (aLong != null) {
 			System.out.println("Found in cache. Time: " + (System.currentTimeMillis() - secRun) + " ms");
 			return aLong;
@@ -59,17 +59,23 @@ public class Server implements AccountService {
 		System.out.println("*******************");
 		System.out.println("Id = " + id + " connected with value = " + value);
 		Long secRun = System.currentTimeMillis();
-		cacheManager.updateValue(id, value);
+
+
+		cacheManager.puth(id, value);
 		System.out.println("Update cache. Time: " + (System.currentTimeMillis() - secRun) + " ms");
+
+
 		Statistic.countOfRequestAddAmountInOneSec++;
 		Statistic.countOfAllRequestAddAmount++;
+
 		String s = null;
 		try {
 			s = UnicastRemoteObject.getClientHost();
+			Statistic.pushToFile("addAmount stat", s);
 		} catch (ServerNotActiveException e) {
 			e.printStackTrace();
 		}
-		Statistic.pushToFile("addAmount stat", s);
+
 
 		dataBase.addAmount(id, value);
 

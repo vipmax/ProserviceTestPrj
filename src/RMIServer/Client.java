@@ -14,32 +14,38 @@ public class Client {
 
 	private Registry registry;
 	private AccountService availableServiceList;
+	private static Integer id;
+	private static Long amount;
 
 	public static void main(String... args) throws Exception {
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			new Thread(new Runnable() {
-			@Override
-			public void run() {
+				private Long amount;
+
+				@Override
+				public void run() {
 				Client client = new Client();
 				try {
 					client.initRegistryAndService();
 					// getAmount
-					Integer id = Integer.valueOf((int) (Math.random() * 1000));
-					System.out.println("Send id to server: " + id);
-					Long amount = client.availableServiceList.getAmount(id);
-					if (amount.equals(DataBase.notFount)) {
-						System.out.println("Not found such id : " + id);
-					} else {
-						System.out.println("Got from server: " + amount);
-					}
+//					id = Integer.valueOf((int) (Math.random() * 1000));
+//					System.out.println("Send id to server: " + id);
+//					amount = client.availableServiceList.getAmount(id);
+//					if (amount.equals(DataBase.notFount)) {
+//						System.out.println("Not found such id : " + id);
+//					} else {
+//						System.out.println("Got from server: " + amount);
+//					}
 
 
 					// addAmount
-					id = Integer.valueOf((int) (Math.random() * 1000));
+					for (int i = 0; i < 1; i++) {
+						id = Integer.valueOf((int) (Math.random() * 1000));
 					amount = new Long((int) (Math.random() * 1000));
 					if (client.availableServiceList.addAmount(id, amount)) {
 						System.out.println("Added in database " + id + ", " + amount);
+					}
 					}
 
 				} catch (RemoteException e) {

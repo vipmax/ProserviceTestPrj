@@ -15,7 +15,7 @@ public class DataBase {
 	public static final Long notFount = new Long((long) -1);
 
 	public DataBase() {
-		SimpleCacheManager cacheManager = SimpleCacheManager.getInstance();
+		CacheManager cacheManager = CacheManager.getInstance();
 		try {
 			cacheManager.loadCache(this);
 		} catch (SQLException e) {
